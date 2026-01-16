@@ -813,9 +813,9 @@ def extract_user_from_messages(messages: list) -> dict:
                     user_name = match.group(1)
                     print(f"[CLM] Found name in system message: {user_name}", file=sys.stderr)
 
-                # Look for user_id
-                match = re.search(r'\buser_id:\s*([^\s,]+)', content, re.IGNORECASE)
-                if match:
+                # Look for user_id or id (various formats)
+                match = re.search(r'\b(?:user_id|id):\s*([^\s,\n]+)', content, re.IGNORECASE)
+                if match and match.group(1).lower() not in ['unknown', 'none', 'anonymous', '']:
                     user_id = match.group(1)
                     print(f"[CLM] Found user_id in system message: {user_id}", file=sys.stderr)
 

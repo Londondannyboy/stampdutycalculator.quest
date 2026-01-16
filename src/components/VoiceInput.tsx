@@ -19,21 +19,21 @@ function VoiceButton({ onMessage, userName, userId }: {
   const [isPending, setIsPending] = useState(false);
   const lastSentMsgId = useRef<string | null>(null);
 
-  // Build system prompt
+  // Build system prompt - this gets forwarded to the CLM endpoint
   const buildSystemPrompt = () => {
-    return `USER_CONTEXT:
+    return `## USER CONTEXT
 name: ${userName || 'Guest'}
-id: ${userId || 'anonymous'}
+user_id: ${userId || 'anonymous'}
 status: ${userName ? 'authenticated' : 'guest'}
 
-GREETING:
-${userName ? `Greet them: "Hi ${userName}! I'm your stamp duty assistant."` : `Greet them: "Hello! I'm your stamp duty calculator assistant."`}
+## GREETING INSTRUCTION
+${userName ? `Greet them by name: "Hi ${userName}! I'm your stamp duty assistant."` : `Greet as guest: "Hello! I'm your stamp duty calculator assistant."`}
 
-IDENTITY:
-- You are a friendly UK stamp duty calculator assistant
-- Help users understand stamp duty for England, Scotland, and Wales
+## YOUR IDENTITY
+You are a friendly UK stamp duty calculator voice assistant.
+Help users understand stamp duty for England, Scotland, and Wales.
 
-KEY KNOWLEDGE:
+## KEY KNOWLEDGE
 - England & Northern Ireland: SDLT (Stamp Duty Land Tax)
 - Scotland: LBTT (Land and Buildings Transaction Tax)
 - Wales: LTT (Land Transaction Tax)
@@ -41,10 +41,10 @@ KEY KNOWLEDGE:
 - Wales has NO first-time buyer relief
 - Additional properties: +5% England, +6% Scotland, +4% Wales
 
-RULES:
-- Keep responses SHORT for voice (1-2 sentences)
+## VOICE RULES
+- Keep responses SHORT for voice (1-2 sentences max)
 - Ask about property price, location, buyer type
-- Be helpful and accurate`;
+- Be conversational and helpful`;
   };
 
   // Forward conversation messages to parent
@@ -90,19 +90,16 @@ RULES:
         console.log("🎤 Connecting with configId:", configId);
         console.log("🎤 Session:", sessionId);
 
-        // Connect with sessionSettings (matches relocation.quest pattern)
+        // Connect with sessionSettings - use systemPrompt (NOT variables!)
+        // The systemPrompt is what gets forwarded to the CLM endpoint
         await connect({
           auth: { type: 'accessToken' as const, value: accessToken },
           configId: configId,
           sessionSettings: {
-            type: 'session_settings' as const,
-            variables: {
-              user_id: userId || '',
-              first_name: userName || '',
-              is_authenticated: userName ? 'true' : 'false',
-            },
+            type: 'session_settings',
+            systemPrompt: systemPrompt,  // This IS forwarded to CLM
             customSessionId: sessionId,
-          } as any,
+          }
         });
 
         console.log("🎤 Connected successfully");
