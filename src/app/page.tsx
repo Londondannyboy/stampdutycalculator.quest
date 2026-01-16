@@ -129,8 +129,8 @@ export default function Home() {
         </div>
       )}
 
-      {/* Voice Input - positioned fixed */}
-      <div className="fixed bottom-24 right-6 z-40">
+      {/* Voice Input - centered at bottom */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
         <VoiceInput onMessage={handleVoiceMessage} userName={firstName} />
       </div>
 

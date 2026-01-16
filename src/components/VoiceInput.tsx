@@ -75,7 +75,17 @@ function VoiceButton({ onMessage, userName }: VoiceInputProps) {
       try {
         console.log("🎤 Fetching Hume token...");
         const res = await fetch("/api/hume-token");
-        const { accessToken } = await res.json();
+        const data = await res.json();
+
+        if (!res.ok || data.error) {
+          throw new Error(data.error || data.details || "Failed to get Hume token");
+        }
+
+        const { accessToken } = data;
+        if (!accessToken) {
+          throw new Error("No access token returned from Hume");
+        }
+        console.log("🎤 Got access token");
 
         // Detect quick reconnect
         const timeSinceLastInteraction = lastInteractionTime.current > 0
@@ -131,17 +141,23 @@ ${greetingInstruction}
 
         const customSessionId = `stamp_duty_${Date.now()}`;
 
-        console.log("🎤 Connecting with configId:", process.env.NEXT_PUBLIC_HUME_CONFIG_ID);
+        const configId = process.env.NEXT_PUBLIC_HUME_CONFIG_ID || "6b8b3912-ce29-45c6-ab6a-0902d7278a68";
+        console.log("🎤 Connecting with configId:", configId);
+
+        if (!configId) {
+          throw new Error("Missing Hume config ID");
+        }
+
         await connect({
           auth: { type: "accessToken", value: accessToken },
-          configId: process.env.NEXT_PUBLIC_HUME_CONFIG_ID || "",
+          configId: configId,
           sessionSettings: {
             type: "session_settings",
             systemPrompt: systemPrompt,
             customSessionId: customSessionId,
           }
         });
-        console.log("🎤 Connected");
+        console.log("🎤 Connected successfully");
 
         // Mark as greeted and trigger initial greeting
         if (!wasGreeted && !isQuickReconnect && userName) {
