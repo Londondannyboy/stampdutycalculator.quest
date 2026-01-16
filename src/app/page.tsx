@@ -43,13 +43,13 @@ export default function Home() {
   const user = session?.user;
   const firstName = user?.name?.split(' ')[0] || user?.email?.split('@')[0] || null;
 
-  const handleVoiceMessage = useCallback((text: string, role: "user" | "assistant") => {
+  const handleVoiceMessage = useCallback((text: string, role?: "user" | "assistant") => {
     // Open the sidebar
     setSidebarOpen(true);
     setVoiceMessage(text);
 
     // Forward message to CopilotKit
-    const messageRole = role === "user" ? Role.User : Role.Assistant;
+    const messageRole = role === "assistant" ? Role.Assistant : Role.User;
     appendMessage(new TextMessage({ content: text, role: messageRole }));
 
     // Clear notification after a delay
