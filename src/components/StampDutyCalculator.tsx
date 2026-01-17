@@ -15,12 +15,22 @@ import {
   getBuyerTypeName,
 } from "@/lib/calculations";
 
-export default function StampDutyCalculator() {
+interface StampDutyCalculatorProps {
+  defaultBuyerType?: BuyerType;
+  defaultRegion?: Region;
+  defaultPrice?: number;
+}
+
+export default function StampDutyCalculator({
+  defaultBuyerType = "standard",
+  defaultRegion = "england",
+  defaultPrice = 0,
+}: StampDutyCalculatorProps) {
   const [propertyDetails, setPropertyDetails] = useState<PropertyDetails>({
-    purchasePrice: 0,
-    region: "england",
+    purchasePrice: defaultPrice,
+    region: defaultRegion,
     propertyType: "residential",
-    buyerType: "standard",
+    buyerType: defaultBuyerType,
   });
 
   const [result, setResult] = useState<StampDutyResult | null>(null);
