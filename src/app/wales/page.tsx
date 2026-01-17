@@ -72,6 +72,24 @@ const RELATED_PAGES = [
   },
 ];
 
+const EXTERNAL_LINKS = [
+  {
+    href: "https://www.gov.wales/land-transaction-tax-guide",
+    label: "Welsh Revenue Authority - LTT",
+    description: "Official LTT guidance from the Welsh Government",
+  },
+  {
+    href: "https://www.gov.wales/land-transaction-tax-rates",
+    label: "LTT Rates",
+    description: "Current Land Transaction Tax rates for Wales",
+  },
+  {
+    href: "https://www.gov.wales/land-transaction-tax-higher-rates-guide",
+    label: "Higher Rates for Additional Properties",
+    description: "WRA guidance on higher LTT rates",
+  },
+];
+
 export default function WalesPage() {
   return (
     <PageLayout
@@ -82,6 +100,7 @@ export default function WalesPage() {
       faqs={FAQS}
       breadcrumbs={[{ label: "Wales", href: "/wales" }]}
       relatedPages={RELATED_PAGES}
+      externalLinks={EXTERNAL_LINKS}
     >
       {/* Calculator */}
       <section className="mb-8">

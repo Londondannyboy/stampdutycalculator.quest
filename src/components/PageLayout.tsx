@@ -14,6 +14,12 @@ interface FAQ {
   answer: string;
 }
 
+interface ExternalLink {
+  href: string;
+  label: string;
+  description: string;
+}
+
 interface PageLayoutProps {
   children: ReactNode;
   title: string;
@@ -21,10 +27,29 @@ interface PageLayoutProps {
   systemPrompt: string;
   initialMessage?: string;
   faqs?: FAQ[];
-  showCalculator?: boolean;
   breadcrumbs?: { label: string; href: string }[];
   relatedPages?: { label: string; href: string; description: string }[];
+  externalLinks?: ExternalLink[];
 }
+
+// Default authoritative external links for stamp duty
+const DEFAULT_EXTERNAL_LINKS: ExternalLink[] = [
+  {
+    href: "https://www.gov.uk/stamp-duty-land-tax",
+    label: "HMRC SDLT Guide",
+    description: "Official government guidance on Stamp Duty Land Tax",
+  },
+  {
+    href: "https://www.gov.uk/stamp-duty-land-tax/residential-property-rates",
+    label: "Current SDLT Rates",
+    description: "Official HMRC stamp duty rates for residential property",
+  },
+  {
+    href: "https://www.gov.uk/guidance/stamp-duty-land-tax-relief-for-first-time-buyers",
+    label: "First-Time Buyer Relief",
+    description: "HMRC guidance on first-time buyer stamp duty relief",
+  },
+];
 
 export function PageLayout({
   children,
@@ -35,11 +60,12 @@ export function PageLayout({
   faqs,
   breadcrumbs,
   relatedPages,
+  externalLinks = DEFAULT_EXTERNAL_LINKS,
 }: PageLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [voiceMessage, setVoiceMessage] = useState("");
   const { appendMessage } = useCopilotChat();
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session } = authClient.useSession();
 
   const user = session?.user;
   const firstName = user?.name?.split(" ")[0] || user?.email?.split("@")[0] || null;
@@ -79,13 +105,13 @@ export function PageLayout({
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-zinc-50 to-zinc-100 dark:from-zinc-950 dark:to-zinc-900">
-      {/* Header */}
-      <header className="w-full py-6 px-4 border-b border-zinc-200 dark:border-zinc-800">
+    <div className="bg-gradient-to-b from-zinc-50 to-zinc-100 dark:from-zinc-950 dark:to-zinc-900">
+      {/* Page Header */}
+      <header className="w-full py-6 px-4 border-b border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50">
         <div className="max-w-4xl mx-auto">
           {/* Breadcrumbs */}
           {breadcrumbs && breadcrumbs.length > 0 && (
-            <nav className="mb-3">
+            <nav className="mb-3" aria-label="Breadcrumb">
               <ol className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
                 <li>
                   <Link
@@ -97,10 +123,11 @@ export function PageLayout({
                 </li>
                 {breadcrumbs.map((crumb, index) => (
                   <li key={index} className="flex items-center gap-2">
-                    <span>/</span>
+                    <span aria-hidden="true">/</span>
                     <Link
                       href={crumb.href}
                       className="hover:text-zinc-900 dark:hover:text-white transition-colors"
+                      aria-current={index === breadcrumbs.length - 1 ? "page" : undefined}
                     >
                       {crumb.label}
                     </Link>
@@ -122,7 +149,7 @@ export function PageLayout({
             {/* Auth status */}
             <div className="flex items-center gap-3">
               <SignedIn>
-                <span className="text-sm text-green-600 dark:text-green-400">
+                <span className="text-sm text-green-600 dark:text-green-400 hidden sm:block">
                   {firstName || user?.email || "Signed in"}
                 </span>
                 <UserButton />
@@ -184,7 +211,7 @@ export function PageLayout({
             </section>
           )}
 
-          {/* Related Pages */}
+          {/* Related Pages - Internal Links */}
           {relatedPages && relatedPages.length > 0 && (
             <section className="mt-12">
               <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">
@@ -195,15 +222,62 @@ export function PageLayout({
                   <Link
                     key={index}
                     href={page.href}
-                    className="block p-4 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 hover:border-blue-500 dark:hover:border-blue-400 transition-colors"
+                    className="block p-4 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 hover:border-blue-500 dark:hover:border-blue-400 transition-colors group"
                   >
-                    <h3 className="font-semibold text-zinc-900 dark:text-white mb-1">
+                    <h3 className="font-semibold text-zinc-900 dark:text-white mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400">
                       {page.label}
                     </h3>
                     <p className="text-sm text-zinc-600 dark:text-zinc-400">
                       {page.description}
                     </p>
                   </Link>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* External Authoritative Links */}
+          {externalLinks && externalLinks.length > 0 && (
+            <section className="mt-12">
+              <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">
+                Official Government Resources
+              </h2>
+              <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 divide-y divide-zinc-200 dark:divide-zinc-800">
+                {externalLinks.map((link, index) => (
+                  <a
+                    key={index}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-start gap-4 p-4 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors group"
+                  >
+                    <div className="flex-shrink-0 w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                      <svg
+                        className="w-5 h-5 text-blue-600 dark:text-blue-400"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                        />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-zinc-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 flex items-center gap-2">
+                        {link.label}
+                        <span className="text-xs font-normal px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded">
+                          GOV.UK
+                        </span>
+                      </h3>
+                      <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-0.5">
+                        {link.description}
+                      </p>
+                    </div>
+                  </a>
                 ))}
               </div>
             </section>

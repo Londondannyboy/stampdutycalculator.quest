@@ -85,6 +85,24 @@ const RELATED_PAGES = [
   },
 ];
 
+const EXTERNAL_LINKS = [
+  {
+    href: "https://revenue.scot/taxes/land-buildings-transaction-tax",
+    label: "Revenue Scotland - LBTT",
+    description: "Official LBTT information from Revenue Scotland",
+  },
+  {
+    href: "https://revenue.scot/taxes/land-buildings-transaction-tax/lbtt-rates-and-bands",
+    label: "LBTT Rates & Bands",
+    description: "Current LBTT rates from Revenue Scotland",
+  },
+  {
+    href: "https://revenue.scot/taxes/land-buildings-transaction-tax/additional-dwelling-supplement-ads",
+    label: "Additional Dwelling Supplement",
+    description: "Official guidance on Scotland's 6% ADS",
+  },
+];
+
 export default function ScotlandPage() {
   return (
     <PageLayout
@@ -95,6 +113,7 @@ export default function ScotlandPage() {
       faqs={FAQS}
       breadcrumbs={[{ label: "Scotland", href: "/scotland" }]}
       relatedPages={RELATED_PAGES}
+      externalLinks={EXTERNAL_LINKS}
     >
       {/* Calculator */}
       <section className="mb-8">
