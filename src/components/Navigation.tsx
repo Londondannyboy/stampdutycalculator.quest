@@ -14,9 +14,15 @@ const CALCULATOR_PAGES = [
 ];
 
 const MORE_PAGES = [
+  { href: "/northern-ireland", label: "Northern Ireland" },
   { href: "/commercial", label: "Commercial Property" },
   { href: "/london", label: "London Calculator" },
+  { href: "/investment-property", label: "Investment Property" },
+  { href: "/company-purchase", label: "Company/SPV" },
   { href: "/holiday-let", label: "Holiday Let" },
+  { href: "/non-resident", label: "Non-Resident" },
+  { href: "/mixed-use", label: "Mixed-Use Property" },
+  { href: "/land", label: "Land Purchase" },
   { href: "/refund", label: "Stamp Duty Refund" },
 ];
 

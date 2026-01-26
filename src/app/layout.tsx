@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { BetaBanner } from "@/components/BetaBanner";
+import { CookieConsent } from "@/components/CookieConsent";
 import "@copilotkit/react-ui/styles.css";
 import "./globals.css";
 
@@ -160,9 +162,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
         <Providers>
+          <BetaBanner />
           <Navigation />
           <main className="flex-1">{children}</main>
           <Footer />
+          <CookieConsent />
         </Providers>
       </body>
     </html>

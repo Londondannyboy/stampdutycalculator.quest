@@ -293,8 +293,23 @@ export function PageLayout({
         </div>
       )}
 
-      {/* Voice Input - centered at bottom */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
+      {/* Floating action buttons - bottom right */}
+      <div className="fixed bottom-6 right-6 z-40 flex flex-col gap-3">
+        {/* Chat button to open sidebar */}
+        {!sidebarOpen && (
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="w-14 h-14 bg-blue-600 hover:bg-blue-500 rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-105"
+            title="Open AI Assistant"
+            aria-label="Open AI Assistant"
+          >
+            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </button>
+        )}
+
+        {/* Voice Input */}
         <VoiceInput
           onMessage={handleVoiceMessage}
           userName={firstName}
@@ -303,7 +318,7 @@ export function PageLayout({
         />
       </div>
 
-      {/* CopilotSidebar */}
+      {/* CopilotSidebar - collapsed by default */}
       <CopilotSidebar
         instructions={systemPrompt}
         labels={{
@@ -314,8 +329,8 @@ export function PageLayout({
               ? `Hi ${firstName}! I can help you calculate stamp duty. Tell me your property price and location.`
               : "Hi! Tell me your property price and location, and I'll calculate your stamp duty."),
         }}
-        defaultOpen={true}
-        clickOutsideToClose={false}
+        defaultOpen={false}
+        clickOutsideToClose={true}
         onSetOpen={setSidebarOpen}
       />
     </div>

@@ -231,12 +231,12 @@ export default function StampDutyCalculator({
           <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
             Property Location
           </label>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             {(["england", "scotland", "wales"] as Region[]).map((region) => (
               <button
                 key={region}
                 onClick={() => updateAndCalculate({ region })}
-                className={`py-3 px-4 rounded-xl text-sm font-medium transition-all ${
+                className={`py-3 px-4 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
                   propertyDetails.region === region
                     ? "bg-blue-600 text-white shadow-md"
                     : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"

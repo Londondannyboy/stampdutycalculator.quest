@@ -5,13 +5,19 @@ const CALCULATOR_LINKS = [
   { href: "/first-time-buyer", label: "First-Time Buyer" },
   { href: "/second-home", label: "Second Home" },
   { href: "/buy-to-let", label: "Buy-to-Let" },
+  { href: "/investment-property", label: "Investment Property" },
+  { href: "/company-purchase", label: "Company/SPV" },
   { href: "/holiday-let", label: "Holiday Let" },
+  { href: "/non-resident", label: "Non-Resident" },
+  { href: "/mixed-use", label: "Mixed-Use" },
+  { href: "/land", label: "Land Purchase" },
   { href: "/refund", label: "Stamp Duty Refund" },
 ];
 
 const REGIONAL_LINKS = [
   { href: "/scotland", label: "Scotland LBTT" },
   { href: "/wales", label: "Wales LTT" },
+  { href: "/northern-ireland", label: "Northern Ireland" },
   { href: "/london", label: "London Calculator" },
   { href: "/commercial", label: "Commercial Property" },
 ];
